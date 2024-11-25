@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { GetPlayingSong } from "../subsonic/songs"
-import { useTheme } from "./themeProvider";
 
 export const Player = () => {
   const [song, setSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const { theme } = useTheme();
 
 
   useEffect(() => {
