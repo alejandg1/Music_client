@@ -5,11 +5,7 @@ const getAlbum = async (id) => {
   return data.album;
 }
 
-const getNewestsAlbums = async (id) => {
+export const getNewestsAlbums = async (id) => {
   let data = await fetchData("getAlbumList.view", { type: "newest", id }, {});
   return data.albumList.album;
 }
-
-getNewestsAlbums().then((data) => {
-  console.log(data);
-})

@@ -1,6 +1,6 @@
 import { fetchData } from "./Index.js"
 
-const getPlaylists = async (id) => {
+export const getPlaylists = async () => {
   let data = await fetchData("getPlaylists.view", {}, {});
   return data.playlists;
 }
