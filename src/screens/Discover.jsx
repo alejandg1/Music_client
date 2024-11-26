@@ -7,7 +7,7 @@ import { getNewestsAlbums } from "../subsonic/albums";
 const Discover = () => {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [albums, setALbums] = useState([]);
+  const [albums, setAlbums] = useState([]);
   const [loadingAl, setLoadingAl] = useState(true);
 
   useEffect(() => {
@@ -16,7 +16,7 @@ const Discover = () => {
       setLoading(false);
     });
     getNewestsAlbums().then((data) => {
-      setALbums(data);
+      setAlbums(data);
       setLoadingAl(false);
     });
   }, []);
@@ -27,7 +27,7 @@ const Discover = () => {
     });
   }
   const renderALbums = () => {
-    return playlists.map((album) => {
+    return albums.map((album) => {
       return (
           <Card id={album.id} src="" desc={album.name} />
       );
@@ -43,7 +43,7 @@ const Discover = () => {
       </View>
       <Text style={styles.text}>Recently Added</Text>
       <View style={{ flexDirection: "row" }}>
-        {loading ? <Text>Loading...</Text> : renderALbums()}
+        {loadingAl ? <Text>Loading...</Text> : renderALbums()}
       </View>
     </View>
   );

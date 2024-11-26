@@ -1,4 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
+import { StatusBar } from "expo-status-bar";
 import { View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import Home from "../screens/Home";
@@ -11,6 +12,7 @@ const Tab = createBottomTabNavigator();
 export const Navbar = () => {
   return (
     <NavigationContainer>
+      <StatusBar style="auto" />
       <Tab.Navigator
         screenOptions={({ route }) => ({
           tabBarIcon: ({ size, focused }) => {

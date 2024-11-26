@@ -1,12 +1,14 @@
 import md5 from "md5";
+import { getConfig } from "../local/config";
+import { genSalt } from "../local/config";
 
-export const fetchData = async (endpoint, params, data) => {
-  let baseUrl = data.Url || "http://192.168.100.223:4533/rest";
-  let username = data.Username || "Alejandro";
-  let password = data.Pass || "AleVillarreal";
-  let apiVersion = data.Version || "1.16.1";
-  let clientName = data.AppName || "MusicClient";
-  let salt = data.Salt || "1";
+export const fetchData = async (endpoint, params) => {
+  let baseUrl = getConfig("url") || "http://192.168.100.223:4533/rest";
+  let username = getConfig("username") || "Alejandro";
+  let password = getConfig("password") || "AleVillarreal";
+  let apiVersion = getConfig("version") || "1.16.1";
+  let clientName = getConfig("client") || "MusicClient";
+  let salt = genSalt(16) || "1";
   try {
     const urlParams = new URLSearchParams({
       u: username,
