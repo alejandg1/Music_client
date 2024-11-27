@@ -34,7 +34,7 @@ export const fetchData = async (endpoint, params) => {
 };
 
 
-const ping = async () => {
+export const ping = async () => {
   let data = await fetchData("ping.view", {});
   console.log(data);
   return data;

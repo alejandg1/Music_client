@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-const Downloads = () => {
+export const Downloads = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Downloads Screen</Text>
@@ -21,5 +21,3 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-
-export default Downloads;

@@ -1,21 +1,20 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { View, StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
-import Home from "../screens/Home";
-import Discover from "../screens/Discover";
-import Downloads from "../screens/Downloads";
+import { Home } from "../screens/Home";
+import { Discover } from "../screens/Discover"
+import { Downloads } from "../screens/Downloads";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 const Tab = createBottomTabNavigator();
 
 export const Navbar = () => {
   return (
-    <NavigationContainer>
+    <>
       <StatusBar style="auto" />
       <Tab.Navigator
         screenOptions={({ route }) => ({
-          tabBarIcon: ({ size, focused }) => {
+          tabBarIcon: ({ focused }) => {
             let iconName;
             if (route.name === 'Home') {
               iconName = "home";
@@ -55,7 +54,7 @@ export const Navbar = () => {
         <Tab.Screen name="Discover" component={Discover} />
         <Tab.Screen name="Downloads" component={Downloads} />
       </Tab.Navigator>
-    </NavigationContainer>
+    </>
   );
 };
 

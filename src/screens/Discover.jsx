@@ -4,7 +4,7 @@ import { Card } from "../components/cards";
 import { getPlaylists } from "../subsonic/playlists";
 import { getNewestsAlbums } from "../subsonic/albums";
 
-const Discover = () => {
+export const Discover = () => {
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [albums, setAlbums] = useState([]);
@@ -62,4 +62,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Discover;

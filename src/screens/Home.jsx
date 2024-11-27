@@ -1,9 +1,11 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
+import { SettingsBtn } from "../components/settings";
 
-const Home = () => {
+export const Home = () => {
   return (
     <View style={styles.container}>
+      <SettingsBtn />
       <Text style={styles.text}>Home Screen</Text>
     </View>
   );
@@ -21,5 +23,3 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
 });
-
-export default Home;
