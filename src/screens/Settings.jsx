@@ -1,20 +1,16 @@
 import React from "react";
-import { View, Text, Button, Alert, StyleSheet } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { View, Text, Button, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { removeCredentials } from "../subsonic/user";
+import { Alert } from "react-native";
 
 export const Settings = () => {
   const navigation = useNavigation();
-  const handleClearCredentials = async () => {
-    try {
-      await AsyncStorage.multiRemove(["url", "username", "password"]);
-      Alert.alert("Éxito", "Las credenciales han sido eliminadas.");
-      navigation.navigate("Login");
-    } catch (error) {
-      console.error("Error al eliminar las credenciales:", error);
-      Alert.alert("Error", "No se pudieron eliminar las credenciales.");
-    }
-  };
+  const handleRemoveCredentials = () => {
+    removeCredentials().then((resp) => {
+      resp ? navigation.navigate("Login") : Alert.alert("Error", "No se pudieron eliminar las credenciales.");
+    });
+  }
 
   return (
     <View style={styles.container}>
@@ -23,7 +19,7 @@ export const Settings = () => {
         <Button
           title="Eliminar credenciales guardadas"
           color="#d9534f"
-          onPress={handleClearCredentials}
+          onPress={handleRemoveCredentials}
         />
       </View>
     </View>
@@ -34,7 +30,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: "#121212",
     justifyContent: "center",
   },
   title: {

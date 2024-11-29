@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Alert } from "react-native";
 import { Login } from "../subsonic/user";
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -9,14 +10,19 @@ export const LoginView = () => {
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
-  const handleLogin = () => {
-    let logged = Login(url, username, password);
-    if (logged) {
-      console.log("Logged in!");
-      navigation.navigate("Main");
+  const handleLogin = async () => {
+    if (url === "" || username === "" || password === "") {
+      Alert.alert("Error", "Faltan datos.");
     }
     else {
-      console.error("Error logging in.");
+      let logged = await Login(url, username, password);
+      if (logged) {
+        navigation.navigate("Main");
+      }
+      else {
+        Alert.alert("Error", "Error al iniciar sesión.");
+      }
+
     }
 
   }
@@ -29,10 +35,17 @@ export const LoginView = () => {
         placeholder="URL"
         placeholderTextColor="#888"
         value={url}
+        inputMode="url"
+        textContentType="URL"
+        autoCapitalize="none"
+        keyboardType="url"
+        autoComplete="url"
         onChangeText={setUrl}
       />
       <TextInput
         style={styles.input}
+        autoComplete="username"
+        keyboardType="default"
         placeholder="Username"
         placeholderTextColor="#888"
         value={username}

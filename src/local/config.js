@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import CryptoJS from "crypto-js"
+import { getRandomBytesAsync } from "expo-crypto"
 
 export const setConfig = async (key, value) => {
   try {
@@ -7,20 +7,27 @@ export const setConfig = async (key, value) => {
       (key, value);
   }
   catch (error) {
-    console.log(error);
+    return false;
   }
 }
 
 export const getConfig = async (key) => {
   try {
-    return await AsyncStorage.getItem(key);
+    let item = (await AsyncStorage.getItem(key));
+    return item;
   }
   catch (error) {
-    console.log(error);
+    return false;
   }
 }
 
 export const genSalt = (bytes) => {
-  return CryptoJS.lib.WordArray.random(bytes).toString(CryptoJS.enc.Hex);
+  try {
+    let salt = getRandomBytesAsync(bytes);
+    return salt;
+  }
+  catch (error) {
+    return false;
+  }
 }
 

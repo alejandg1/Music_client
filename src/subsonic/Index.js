@@ -3,11 +3,11 @@ import { getConfig } from "../local/config";
 import { genSalt } from "../local/config";
 
 export const fetchData = async (endpoint, params) => {
-  let baseUrl = getConfig("url") || "http://192.168.100.223:4533/rest";
-  let username = getConfig("username") || "Alejandro";
-  let password = getConfig("password") || "AleVillarreal";
-  let apiVersion = getConfig("version") || "1.16.1";
-  let clientName = getConfig("client") || "MusicClient";
+  let baseUrl = await getConfig("url") || "http://192.168.100.223:4533/rest";
+  let username = await getConfig("username") || "Alejandro";
+  let password = await getConfig("password") || "AleVillarreal";
+  let apiVersion = await getConfig("version") || "1.16.1";
+  let clientName = await getConfig("client") || "MusicClient";
   let salt = genSalt(16) || "1";
   try {
     const urlParams = new URLSearchParams({
@@ -21,23 +21,23 @@ export const fetchData = async (endpoint, params) => {
     });
     const response = await fetch(`${baseUrl}/${endpoint}?${urlParams.toString()}`);
     const data = await response.json();
-
     if (data["subsonic-response"].status === "ok") {
       return data["subsonic-response"];
     } else {
-      throw new Error(data["subsonic-response"].error.message);
+      return false;
     }
   } catch (error) {
-    console.error("Error al comunicarse con la API:", error);
-    throw error;
+    return false;
   }
 };
 
 
 export const ping = async () => {
   let data = await fetchData("ping.view", {});
-  console.log(data);
-  return data;
+  if (data) {
+    return true;
+  }
+  return false;
 }
 
 
