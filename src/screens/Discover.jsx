@@ -29,7 +29,7 @@ export const Discover = () => {
   const renderALbums = () => {
     return albums.map((album) => {
       return (
-          <Card id={album.id} src="" desc={album.name} />
+        <Card id={album.id} src="" desc={album.name} />
       );
     });
   }
