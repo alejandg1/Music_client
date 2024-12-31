@@ -2,21 +2,18 @@ import React, { useEffect, useState, useRef } from "react";
 import {
   StyleSheet,
   ScrollView,
-  Text,
   View,
-  Image,
-  Pressable,
   Animated,
-  Dimensions,
 } from "react-native";
 import Slider from "@react-native-community/slider";
-import { Feather } from "@expo/vector-icons";
 import { Audio } from "expo-av";
 import { useLocalSearchParams } from "expo-router";
 import { useTheme } from "../../../src/context/ThemeContext";
 import { GetSong, streamSong } from "../../../src/utils/subsonic/songs";
-
-const { width } = Dimensions.get("window");
+import { SecondaryText } from "../../../src/components/text";
+import { CoverImage } from "../../../src/components/image";
+import { NextBtn, PrevBtn, RepeatBtn, ShuffleBtn, TogglePlayPauseBtn } from "../../../src/components/button";
+import { Feather } from "@expo/vector-icons"; // Importar Feather para los iconos de volumen
 
 export default function Song() {
   const [song, setSong] = useState(null);
@@ -26,6 +23,7 @@ export default function Song() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
   const { id, cover } = useLocalSearchParams();
+  const [volume, setVolume] = useState(1);
   const { style } = useTheme();
 
   const scrollAnim = useRef(new Animated.Value(0)).current;
@@ -39,7 +37,7 @@ export default function Song() {
         const uri = await streamSong(id);
         const { sound: playbackObject } = await Audio.Sound.createAsync(
           { uri: uri },
-          { shouldPlay: false }
+          { shouldPlay: false, staysActiveInBackground: true }
         );
         setSound(playbackObject);
       }
@@ -49,6 +47,13 @@ export default function Song() {
       if (sound) sound.unloadAsync();
     };
   }, [id]);
+
+  const handleVolumeChange = async (value) => {
+    setVolume(value);
+    if (sound) {
+      await sound.setVolumeAsync(value);
+    }
+  };
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -65,7 +70,6 @@ export default function Song() {
   const togglePlayPause = async () => {
     if (sound) {
       const status = await sound.getStatusAsync();
-      console.log(status)
       if (status.isPlaying) {
         await sound.pauseAsync();
         setIsPlaying(false);
@@ -108,7 +112,6 @@ export default function Song() {
 
   useEffect(() => {
     if (song && containerWidth && song.title.length * 12 > containerWidth) {
-      // Inicia la animación solo si el título es más grande que el contenedor
       startTitleAnimation();
     }
   }, [song, containerWidth]);
@@ -118,71 +121,87 @@ export default function Song() {
     setContainerWidth(width);
   };
 
+  // Determina el ícono de volumen según el valor
+  const getVolumeIcon = () => {
+    if (volume === 0) {
+      return "volume-x"; // Volumen silenciado
+    } else if (volume <= 0.5) {
+      return "volume-1"; // Volumen bajo
+    } else {
+      return "volume-2"; // Volumen alto
+    }
+  };
+
   if (!song) {
     return (
       <View style={[styles.container, { backgroundColor: style.background }]}>
-        <Text style={styles.text}>Cargando canción...</Text>
+        <SecondaryText children="Cargando canción..." />
       </View>
     );
   }
 
   return (
     <View style={[styles.container, { backgroundColor: style.background }]}>
-      <Image source={{ uri: cover }} style={styles.cover} />
+      <CoverImage source={cover} />
       <View style={styles.titleContainer} onLayout={onTitleLayout}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <Animated.Text
             style={[
               styles.title,
-              { transform: [{ translateX: scrollAnim }] },
               { color: style.text },
+              { transform: [{ translateX: scrollAnim }] },
             ]}
             numberOfLines={1}
           >
             {song.title}
           </Animated.Text>
         </ScrollView>
+
+        <SecondaryText text={song.artist} />
       </View>
-      <Text style={[styles.artist, { color: style.text }]}>{song.artist}</Text>
       <View style={styles.controls}>
         <Slider
           style={styles.slider}
           minimumValue={0}
           maximumValue={duration}
           minimumTrackTintColor={style.accent}
-          maximumTrackTintColor="#8A8A8A"
-          thumbTintColor="#FFFFFF"
+          maximumTrackTintColor={style.secondaryText}
+          thumbTintColor={style.accent}
           value={currentTime}
           onSlidingComplete={handleSliderChange}
         />
         <View style={styles.timeContainer}>
-          <Text style={[styles.timeText, { color: style.secondaryText }]}>{formatTime(currentTime)}</Text>
-          <Text style={[styles.timeText, { color: style.secondaryText }]}>{formatTime(duration)}</Text>
+          <SecondaryText text={formatTime(currentTime)} />
+          <SecondaryText text={formatTime(duration)} />
         </View>
+        <SecondaryText text={song.suffix + " - " + song.bitRate + "kbps"} />
       </View>
-      <Text style={[styles.details, { color: style.text }]}>
-        {song.suffix} - {song.bitRate}kbps
-      </Text>
+
+      {/* Contenedor de volumen con íconos */}
+      <View style={styles.volumeContainer}>
+        <Feather
+          name={getVolumeIcon()}
+          size={24}
+          color={style.text}
+          style={styles.volumeIcon}
+        />
+        <Slider
+          style={styles.volumeSlider}
+          minimumValue={0}
+          maximumValue={1}
+          value={volume}
+          onValueChange={handleVolumeChange}
+          minimumTrackTintColor={style.accent}
+          maximumTrackTintColor="#8A8A8A"
+          thumbTintColor="#FFFFFF"
+        />
+      </View>
       <View style={styles.controlButtons}>
-        <Pressable>
-          <Feather name="shuffle" size={24} color="#FFFFFF" />
-        </Pressable>
-        <Pressable>
-          <Feather name="skip-back" size={32} color="#FFFFFF" />
-        </Pressable>
-        <Pressable onPress={() => togglePlayPause()}>
-          <Feather
-            name={isPlaying ? "pause-circle" : "play-circle"}
-            size={48}
-            color="#FFFFFF"
-          />
-        </Pressable>
-        <Pressable>
-          <Feather name="skip-forward" size={32} color="#FFFFFF" />
-        </Pressable>
-        <Pressable>
-          <Feather name="repeat" size={24} color="#FFFFFF" />
-        </Pressable>
+        <ShuffleBtn />
+        <PrevBtn />
+        <TogglePlayPauseBtn toggle={isPlaying} onPress={togglePlayPause} />
+        <NextBtn />
+        <RepeatBtn />
       </View>
     </View>
   );
@@ -190,31 +209,21 @@ export default function Song() {
 
 const styles = StyleSheet.create({
   container: {
+    display: "flex",
     flex: 1,
-    justifyContent: "center",
+    flexDirection: "column",
+    justifyContent: "flex-start",
     alignItems: "center",
     padding: 20,
-  },
-  cover: {
-    width: 250,
-    height: 250,
-    borderRadius: 10,
-    marginBottom: 20,
-  },
-  titleContainer: {
-    width: "90%",
-    alignItems: "center",
-    marginBottom: 10,
   },
   title: {
     fontSize: 24,
     fontFamily: "JetBrainsMono-Bold",
-    overflow: "hidden",
   },
-  artist: {
-    fontSize: 18,
-    fontFamily: "JetBrainsMono-Regular",
-    marginBottom: 20,
+  titleContainer: {
+    width: "90%",
+    alignItems: "flex-start",
+    marginBottom: "35%",
   },
   controls: {
     width: "100%",
@@ -229,22 +238,25 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     width: "90%",
   },
-  timeText: {
-    fontSize: 14,
-  },
-  details: {
-    fontSize: 16,
-    marginTop: 10,
-    marginBottom: 30,
-  },
   controlButtons: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     width: "90%",
+    marginTop: "12%",
+  },
+  volumeContainer: {
+    width: "90%",
+    flexDirection: "row",
+    alignItems: "center",
     marginTop: 20,
   },
-  text: {
-    fontSize: 16,
+  volumeSlider: {
+    flex: 1,
+    height: 40,
+    marginHorizontal: 10,
+  },
+  volumeIcon: {
+    marginHorizontal: 5,
   },
 });
