@@ -1,8 +1,8 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { SettingsBtn } from "../components/settings";
+import { SettingsBtn } from "../../src/components/settings";
 
-export const Home = () => {
+export default function Home() {
   return (
     <View style={styles.container}>
       <SettingsBtn />

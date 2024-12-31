@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { Alert } from "react-native";
-import { Login } from "../subsonic/user";
+import { SingIn } from "../src/utils/subsonic/user";
 import { View, TextInput, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
-export const LoginView = () => {
+export default function Login() {
   const [url, setUrl] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -15,9 +15,9 @@ export const LoginView = () => {
       Alert.alert("Error", "Faltan datos.");
     }
     else {
-      let logged = await Login(url, username, password);
+      let logged = await SingIn(url, username, password);
       if (logged) {
-        navigation.navigate("Main");
+        navigation.navigate("/main/Home");
       }
       else {
         Alert.alert("Error", "Error al iniciar sesión.");

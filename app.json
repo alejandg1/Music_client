@@ -7,6 +7,10 @@
     "icon": "./src/assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "scheme": "SubClient",
+    "assets": [
+      "./src/assets"
+    ],
     "splash": {
       "image": "./src/assets/splash-icon.png",
       "resizeMode": "contain",

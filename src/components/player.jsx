@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { GetPlayingSong } from "../subsonic/songs"
+import { GetPlayingSong } from "../../src/utils/subsonic/songs"
 
 export const Player = () => {
   const [song, setSong] = useState(null);

@@ -1,6 +1,6 @@
-import {fetchData} from "./Index.js"
+import { fetchData } from "./Index.js"
 
-const getAlbum = async (id) => {
+export const getAlbum = async (id) => {
   let data = await fetchData("getAlbum.view", { id }, {});
   return data.album;
 }

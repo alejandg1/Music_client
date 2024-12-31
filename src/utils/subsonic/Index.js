@@ -19,6 +19,9 @@ export const fetchData = async (endpoint, params) => {
       f: "json",
       ...params,
     });
+    if (endpoint === "getCoverArt.view" || endpoint === "stream") {
+      return (`${baseUrl}/${endpoint}?${urlParams.toString()}`)
+    }
     const response = await fetch(`${baseUrl}/${endpoint}?${urlParams.toString()}`);
     const data = await response.json();
     if (data["subsonic-response"].status === "ok") {

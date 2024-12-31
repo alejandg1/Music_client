@@ -22,5 +22,5 @@ export const streamSong = async (id) => {
       format: transcoding,
       maxBitRate: maxBit
     });
-  return data.song;
+  return data;
 }

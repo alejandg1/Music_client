@@ -1,25 +1,26 @@
-const darkTheme = {
-  backgroundColor: "#000000",
-  cardBackgroundColor: "#1A1A1A",
-  primaryTextColor: "#FFFFFF",
-  secondaryTextColor: "#888888",
-  accentColor: "#FFFFFF",
-  progressBarColor: "#4B8EFC",
-  heartIconColor: "#FF4C4C",
-  audioDetailsColor: "#C0C0C0",
-  controlButtonColor: "#FFFFFF",
-  controlButtonBackground: "#2A2A2A",
+const dark = {
+  background: '#121212',
+  primary: '#1F1F1F',
+  text: '#FFFFFF',
+  secondaryText: '#B3B3B3',
+  accent: '#5752D7',
+  card: '#1E1E1E',
+  border: '#2C2C2C',
+  icon: '#FFFFFF',
 };
 
-const lightTheme = {
-  backgroundColor: "#FFFFFF",
-  cardBackgroundColor: "#F5F5F5",
-  primaryTextColor: "#000000",
-  secondaryTextColor: "#666666",
-  accentColor: "#4B8EFC",
-  progressBarColor: "#4B8EFC",
-  heartIconColor: "#FF4C4C",
-  audioDetailsColor: "#666666",
-  controlButtonColor: "#4B8EFC",
-  controlButtonBackground: "#E0E0E0",
+const light = {
+  background: '#FFFFFF',
+  primary: '#F7F7F7',
+  text: '#000000',
+  secondaryText: '#7A7A7A',
+  accent: '#5752D7',
+  card: '#E5E5E5',
+  border: '#D1D1D1',
+  icon: '#000000',
+};
+
+export const colors = {
+  dark,
+  light,
 };

@@ -1,20 +1,15 @@
+import { Tabs } from "expo-router"
+import { StyleSheet, SafeAreaView, Button } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { StatusBar } from "expo-status-bar";
-import { View, StyleSheet } from "react-native";
-import Home from "../../app/screens/Home";
-import Discover from "../../app/screens/Discover";
-import Downloads from "../../app/screens/Downloads";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { useTheme } from "../context/ThemeContext";
+import Home from "./Home";
+import { View } from "react-native";
+import Discover from "./Discover";
+import Downloads from "./Downloads";
 
-const Tab = createBottomTabNavigator();
-
-export const Navbar = () => {
-  const { style } = useTheme();
+export default function MainLayout() {
   return (
-    <>
-      <StatusBar style="auto" />
-      <Tab.Navigator
+    <SafeAreaView style={styles.container}>
+      <Tabs
         screenOptions={({ route }) => ({
           tabBarIcon: ({ focused }) => {
             let iconName;
@@ -39,33 +34,38 @@ export const Navbar = () => {
             );
           },
           tabBarStyle: {
-            backgroundColor: style.background,
+            backgroundColor: "#121212",
             alignItems: "center",
-            justifyContent: "space-between",
+            justifyContent: "center",
             paddingBottom: 5,
-            height: 60,
+            height: 50,
             borderTopWidth: 0,
           },
+          tabBarHideOnKeyboard: true,
+          headerShown: false,
           tabBarShowLabel: false,
           animation: "fade",
-          headerShown: false,
         })}
-      >
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Discover" component={Discover} />
-        <Tab.Screen name="Downloads" component={Downloads} />
-      </Tab.Navigator>
-    </>
-  );
-};
+      />
+      <Tabs.Screen name="Home" component={Home} />
+      <Tabs.Screen name="Discover" component={Discover} />
+      <Tabs.Screen name="Downloads" component={Downloads} />
+    </SafeAreaView>
+  )
+}
 
 const styles = StyleSheet.create({
   icon: {
     color: "#f0f0f0",
     marginLeft: 1,
   },
+  container: {
+    flex: 1,
+    backgroundColor: "#121212",
+  },
   cont: {
-    borderRadius: 15,
+    borderRadius: 20,
+    padding: 10,
     height: 50,
     alignItems: "center",
     width: 50,

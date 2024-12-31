@@ -6,7 +6,7 @@ import { useNavigation } from "@react-navigation/native";
 export const SettingsBtn = () => {
   const navigation = useNavigation();
   return (
-    <TouchableOpacity onPress={() => navigation.navigate('Settings')}>
+    <TouchableOpacity onPress={() => navigation.navigate('screens/Settings')}>
       <View>
         <MaterialIcons name="settings" size={28} color="white" />
       </View>

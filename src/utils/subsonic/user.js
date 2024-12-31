@@ -3,12 +3,12 @@ import { Alert } from "react-native";
 import { setConfig, getConfig } from "../local/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const Login = async (url, username, passw, version = "1.16.1", client = "Music_Client") => {
+export const SingIn = async (url, username, passw, version = "1.16.1", client = "Music_Client", coverSize = "720") => {
   setConfig("url", url);
   setConfig("username", username);
   setConfig("password", passw);
   setConfig("version", version);
-  setConfig("client", client);
+  setConfig("client", client); setConfig("sizeCover", coverSize);
   let valid = await ping();
   if (valid) {
     return true;

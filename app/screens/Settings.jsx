@@ -1,14 +1,14 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { removeCredentials } from "../subsonic/user";
+import { removeCredentials } from "../../src/utils/subsonic/user";
 import { Alert } from "react-native";
 
-export const Settings = () => {
+export default function Settings() {
   const navigation = useNavigation();
   const handleRemoveCredentials = () => {
     removeCredentials().then((resp) => {
-      resp ? navigation.navigate("Login") : Alert.alert("Error", "No se pudieron eliminar las credenciales.");
+      resp ? navigation.navigate("screens/Login") : Alert.alert("Error", "No se pudieron eliminar las credenciales.");
     });
   }
 
