@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, View, Text, StyleSheet, Pressable, FlatList, ActivityIndicator } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
+import { useTheme } from "../../src/context/ThemeContext";
+import { PrincipalText } from "../../src/components/text";
+import { ScrollView, View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
 import { Card } from "../../src/components/cards";
 import { getPlaylists } from "../../src/utils/subsonic/playlists";
 import { getNewestsAlbums } from "../../src/utils/subsonic/albums";
-import { Link } from "expo-router";
+import { LinkBtn, SearchBtn } from "../../src/components/button";
 
 const renderAlbum = ({ item }) => {
   return (
@@ -20,6 +21,7 @@ const renderList = ({ item }) => {
 
 
 export default function Discover() {
+  const { style } = useTheme();
   const [playlists, setPlaylists] = useState([]);
   const [loading, setLoading] = useState(true);
   const [albums, setAlbums] = useState([]);
@@ -37,9 +39,12 @@ export default function Discover() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container,{backgroundColor:style.background}]}>
+      <View style={styles.header}>
+        <SearchBtn />
+      </View>
       <ScrollView>
-        <Text style={styles.text}>Playlists</Text>
+        <PrincipalText text="Playlists" />
         {loading ? (
           <ActivityIndicator size="large" color="#ffffff" />
         ) : (
@@ -53,7 +58,7 @@ export default function Discover() {
           />
         )}
 
-        <Text style={styles.text}>Recently Added</Text>
+        <PrincipalText text="Recently added" />
         {loadingAl ? (
           <ActivityIndicator size="large" color="#ffffff" />
         ) : (
@@ -66,13 +71,7 @@ export default function Discover() {
             style={styles.carousel}
           />
         )}
-
-        <Link href="/screens/Artists" asChild>
-          <Pressable style={styles.button} >
-            <Text style={styles.text}>Artistas</Text>
-            <MaterialIcons name="music-note" size={30} color="#ffffff" />
-          </Pressable>
-        </Link>
+        <LinkBtn text="Artistas" route="/screens/Artists" />
       </ScrollView>
     </View>
   );
@@ -81,23 +80,15 @@ export default function Discover() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#121212",
-  },
-  button: {
-    backgroundColor: "#5752D7",
-    display: "flex",
-    flexDirection: "row",
-    width: 100,
-    height: 50,
-    borderRadius: 10,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
+    padding: 10,
   },
-  text: {
-    color: "white",
-    fontSize: 20,
-    marginLeft: 10,
-    marginVertical: 10,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 20,
   },
   carousel: {
     marginBottom: 20,

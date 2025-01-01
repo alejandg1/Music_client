@@ -42,7 +42,7 @@ export default function Index() {
   }, [isLoading, isLoggedIn, fontsLoaded]);
 
   return (
-    <View style={[styles.container,{backgroundColor:style.background}]}>
+    <View style={[styles.container, { backgroundColor: style.background }]}>
       <ActivityIndicator size="large" color={style.accent} />
     </View>
   );

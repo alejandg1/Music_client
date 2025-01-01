@@ -1,5 +1,5 @@
 import { Tabs } from "expo-router"
-import { StyleSheet, SafeAreaView, Button } from "react-native";
+import { StyleSheet, SafeAreaView } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import Home from "./Home";
 import { View } from "react-native";
@@ -44,7 +44,7 @@ export default function MainLayout() {
           tabBarHideOnKeyboard: true,
           headerShown: false,
           tabBarShowLabel: false,
-          animation: "fade",
+          animation: "shift",
         })}
       />
       <Tabs.Screen name="Home" component={Home} />

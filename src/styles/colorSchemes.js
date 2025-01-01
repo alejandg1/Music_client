@@ -1,6 +1,7 @@
 const dark = {
   background: '#121212',
   primary: '#1F1F1F',
+  warn: '#d9534f',
   text: '#FFFFFF',
   secondaryText: '#B3B3B3',
   accent: '#5752D7',
@@ -12,6 +13,7 @@ const dark = {
 const light = {
   background: '#FFFFFF',
   primary: '#F7F7F7',
+  warn: '#d9534f',
   text: '#000000',
   secondaryText: '#7A7A7A',
   accent: '#5752D7',

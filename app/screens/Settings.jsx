@@ -1,26 +1,28 @@
 import React from "react";
-import { View, Text, Button, StyleSheet } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { View, StyleSheet } from "react-native";
 import { removeCredentials } from "../../src/utils/subsonic/user";
 import { Alert } from "react-native";
+import { router } from "expo-router";
+import { useTheme } from "../../src/context/ThemeContext";
+import { SettingsBtn } from "../../src/components/button";
+import { PrincipalText } from "../../src/components/text";
 
 export default function Settings() {
-  const navigation = useNavigation();
+  const { style } = useTheme();
   const handleRemoveCredentials = () => {
     removeCredentials().then((resp) => {
-      resp ? navigation.navigate("screens/Login") : Alert.alert("Error", "No se pudieron eliminar las credenciales.");
+      resp ? router.replace("/Login") : Alert.alert("Error", "No se pudieron eliminar las credenciales.");
     });
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Configuración</Text>
+    <View style={[styles.container, { backgroundColor: style.background, }]}>
+      <PrincipalText>Configuración</PrincipalText>
       <View style={styles.optionContainer}>
-        <Button
-          title="Eliminar credenciales guardadas"
-          color="#d9534f"
-          onPress={handleRemoveCredentials}
-        />
+        <SettingsBtn text="Log Out" onPress={() => {
+          handleRemoveCredentials()
+        }
+        } />
       </View>
     </View>
   );
@@ -30,17 +32,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "#121212",
-    justifyContent: "center",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-  },
-  optionContainer: {
-    marginVertical: 10,
+    justifyContent: "flex-start"
   },
 });
 

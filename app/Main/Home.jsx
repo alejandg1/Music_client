@@ -1,12 +1,21 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { SettingsBtn } from "../../src/components/settings";
+import { SecondaryText, PrincipalText } from "../../src/components/text";
+import { useTheme } from "../../src/context/ThemeContext";
+import { SearchBtn } from "../../src/components/button";
 
 export default function Home() {
+  const { style } = useTheme();
   return (
-    <View style={styles.container}>
-      <SettingsBtn />
-      <Text style={styles.text}>Home Screen</Text>
+    <View style={[styles.container, { backgroundColor: style.background }]}>
+      <View style={styles.header}>
+        <SearchBtn />
+        <SettingsBtn />
+      </View>
+      <View style={styles.content}>
+        <PrincipalText text="Bienvenido a MusiCli" />
+      </View>
     </View>
   );
 };
@@ -14,12 +23,14 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    padding: 10,
+    justifyContent: "flex-start",
     alignItems: "center",
-    backgroundColor: "#121212",
   },
-  text: {
-    color: "white",
-    fontSize: 20,
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 20,
   },
 });

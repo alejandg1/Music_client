@@ -5,7 +5,7 @@ import { Text } from "react-native";
 
 export const PrincipalText = ({ text }) => {
   const { style } = useTheme();
-  return <Text style={[styles.principal, { color: style.Text }]}>{text}</Text>;
+  return <Text style={[styles.principal, { color: style.text }]}>{text}</Text>;
 }
 export const SecondaryText = ({ text }) => {
   const { style } = useTheme();

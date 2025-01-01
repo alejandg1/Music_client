@@ -1,6 +1,8 @@
-import { Pressable } from "react-native";
+import { Pressable, Text } from "react-native";
+import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
+import { Link } from "expo-router";
 
 
 export const TogglePlayPauseBtn = ({ toggle, onPress }) => {
@@ -47,3 +49,57 @@ export const RepeatBtn = ({ state, onPress }) => {
     </Pressable>
   );
 }
+
+export const SubmitBtn = ({ onPress }) => {
+  const { style } = useTheme();
+  return (
+    <Pressable style={[styles.btn, { backgroundColor: style.btn }]} onPress={onPress}>
+      <Ionicons name="add-circle-outline" size={34} color={style.accent} />
+    </Pressable>
+  );
+}
+
+export const SettingsBtn = ({ onPress, text }) => {
+  const { style } = useTheme();
+  return (
+    <Pressable style={[styles.btn, { backgroundColor: style.btn }]} onPress={onPress}>
+      <Text style={[styles.text, { color: style.text }]}>{text}</Text>
+    </Pressable>
+  );
+}
+
+export const LinkBtn = ({ route, text }) => {
+  const { style } = useTheme();
+  return (
+    <Link href={route} asChild>
+      <Pressable style={[styles.btn, { backgroundColor: style.btn }]}>
+        <Text style={[styles.text, { color: style.text }]}>{text}</Text>
+      </Pressable>
+    </Link>
+  );
+}
+
+export const SearchBtn = ({ onPress }) => {
+  const { style } = useTheme();
+  return (
+    <Pressable style={[styles.btn, { backgroundColor: style.btn }]} onPress={onPress}>
+      <Ionicons name="search" size={30} color={style.accent} />
+    </Pressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  btn: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+  text: {
+    fontSize: 20,
+    fontFamily: "JetBrainsMono-Regular",
+  },
+
+});
+
+
+
