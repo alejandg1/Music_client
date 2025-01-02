@@ -5,7 +5,8 @@ import { ScrollView, View, StyleSheet, FlatList, ActivityIndicator } from "react
 import { Card } from "../../src/components/cards";
 import { getPlaylists } from "../../src/utils/subsonic/playlists";
 import { getNewestsAlbums } from "../../src/utils/subsonic/albums";
-import { LinkBtn, SearchBtn } from "../../src/components/button";
+import { LinkBtn } from "../../src/components/button";
+import { SearchBar } from "../../src/components/searchBar";
 
 const renderAlbum = ({ item }) => {
   return (
@@ -39,9 +40,9 @@ export default function Discover() {
   }, []);
 
   return (
-    <View style={[styles.container,{backgroundColor:style.background}]}>
+    <View style={[styles.container, { backgroundColor: style.background }]}>
       <View style={styles.header}>
-        <SearchBtn />
+        <SearchBar />
       </View>
       <ScrollView>
         <PrincipalText text="Playlists" />

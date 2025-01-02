@@ -4,17 +4,18 @@ import { StyleSheet, Animated, Pressable, Text, Image, View } from "react-native
 import { getCoverArt } from "../../src/utils/subsonic/art";
 import { useRouter } from "expo-router";
 import { useTheme } from "../context/ThemeContext";
-import { usePlaylist } from "../context/PlaylistsContext";
+import { usePlaylist } from "../context/PlaylistContext";
 
 export const ListItem = ({ item }) => {
   const [cover, setCover] = useState(null);
   const opacity = useRef(new Animated.Value(0)).current;
   const router = useRouter()
   const { style } = useTheme();
-  const { addToPlaylist, selectSong } = usePlaylist();
-  const handlePress = () => {
+  const { initSong, addToPlaylist, dropPlaylist } = usePlaylist();
+  const handlePress = async () => {
+    dropPlaylist();
     addToPlaylist(item.id);
-    selectSong(item.id);
+    initSong(item.id);
     router.push({
       pathname: `/screens/song/${item.id}`,
       params: { cover: cover },

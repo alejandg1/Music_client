@@ -1,6 +1,6 @@
 import { Stack } from "expo-router"
 import { ThemeProvider } from "../src/context/ThemeContext"
-import { PlaylistProvider } from "../src/context/PlaylistsContext"
+import { PlaylistProvider } from "../src/context/PlaylistContext"
 
 
 export default function Layout() {

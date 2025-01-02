@@ -25,11 +25,16 @@
         "foregroundImage": "./src/assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
         "useNextNotificationsApi": true,
-        "permissions": ["FOREGROUND_SERVICE"]
+        "permissions": [
+          "FOREGROUND_SERVICE"
+        ]
       }
     },
     "web": {
       "favicon": "./src/assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-audio"
+    ]
   }
 }

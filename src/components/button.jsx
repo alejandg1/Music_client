@@ -3,6 +3,8 @@ import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "expo-router";
+import { usePlaylist } from "../context/PlaylistContext";
+import { play } from "react-native-track-player/lib/src/trackPlayer";
 
 
 export const TogglePlayPauseBtn = ({ toggle, onPress }) => {
@@ -15,7 +17,15 @@ export const TogglePlayPauseBtn = ({ toggle, onPress }) => {
 }
 
 export const NextBtn = ({ onPress }) => {
+  const { playlist } = usePlaylist();
   const { style } = useTheme();
+  if (playlist.length != 0) {
+    return (
+      <Pressable >
+        <Ionicons name="play-skip-forward-outline" size={40} color={style.border} />
+      </Pressable>
+    );
+  }
   return (
     <Pressable onPress={onPress}>
       <Ionicons name="play-skip-forward-outline" size={40} color={style.secondaryText} />
@@ -25,9 +35,13 @@ export const NextBtn = ({ onPress }) => {
 
 export const PrevBtn = ({ onPress }) => {
   const { style } = useTheme();
+  const { playlist, PrevSong, initSong } = usePlaylist();
+  const color = playlist.length != 0 ? style.border : style.secondaryText;
+  const func = playlist.length != 0 ? () => { initSong(playlist[0]) } : PrevSong;
+
   return (
-    <Pressable onPress={onPress}>
-      <Ionicons name="play-skip-back-outline" size={40} color={style.secondaryText} />
+    <Pressable onPress={func}>
+      <Ionicons name="play-skip-back-outline" size={40} color={color} />
     </Pressable>
   );
 }

@@ -14,7 +14,7 @@ export const PrincipalInput = ({ value, onChangeText, placeholder }) => {
     />
   );
 }
- export const SearchInput = ({ value, onChangeText, placeholder }) => {
+export const SearchInput = ({ value, onChangeText, placeholder }) => {
   const { style } = useTheme();
   return (
     <TextInput
@@ -25,6 +25,21 @@ export const PrincipalInput = ({ value, onChangeText, placeholder }) => {
       onChangeText={onChangeText}
     />
   );
+}
+
+export const PasswordInput = ({ value, onChangeText, placeholder }) => {
+  const { style } = useTheme();
+  return (
+    <TextInput
+      style={[styles.input]}
+      placeholder={placeholder}
+      placeholderTextColor={style.secondaryText}
+      value={value}
+      onChangeText={onChangeText}
+      secureTextEntry
+    />
+  );
+}
 
 const styles = StyleSheet.create({
   input: {

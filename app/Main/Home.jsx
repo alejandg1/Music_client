@@ -1,22 +1,23 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { SettingsBtn } from "../../src/components/settings";
-import { SecondaryText, PrincipalText } from "../../src/components/text";
-import { useTheme } from "../../src/context/ThemeContext";
+import { PrincipalText } from "../../src/components/text";
 import { SearchBtn } from "../../src/components/button";
+import { RootContainer } from "../../src/components/container";
 
 export default function Home() {
-  const { style } = useTheme();
   return (
-    <View style={[styles.container, { backgroundColor: style.background }]}>
-      <View style={styles.header}>
-        <SearchBtn />
-        <SettingsBtn />
+    <RootContainer>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <SearchBtn />
+          <SettingsBtn />
+        </View>
+        <View style={styles.content}>
+          <PrincipalText text="Bienvenido a MusiCli" />
+        </View>
       </View>
-      <View style={styles.content}>
-        <PrincipalText text="Bienvenido a MusiCli" />
-      </View>
-    </View>
+    </RootContainer>
   );
 };
 

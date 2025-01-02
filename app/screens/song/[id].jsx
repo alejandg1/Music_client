@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Loading } from "../../../src/components/loading";
 import {
   StyleSheet,
   ScrollView,
@@ -6,26 +7,22 @@ import {
   Animated,
 } from "react-native";
 import Slider from "@react-native-community/slider";
-import { Audio } from "expo-av";
 import { useLocalSearchParams } from "expo-router";
 import { useTheme } from "../../../src/context/ThemeContext";
-import { GetSong, streamSong } from "../../../src/utils/subsonic/songs";
+import { GetSong } from "../../../src/utils/subsonic/songs";
 import { SecondaryText } from "../../../src/components/text";
 import { CoverImage } from "../../../src/components/image";
 import { NextBtn, PrevBtn, RepeatBtn, ShuffleBtn, TogglePlayPauseBtn } from "../../../src/components/button";
-import { Feather } from "@expo/vector-icons"; // Importar Feather para los iconos de volumen
+import { usePlaylist } from "../../../src/context/PlaylistContext";
 
 export default function Song() {
   const [song, setSong] = useState(null);
-  const [sound, setSound] = useState(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [containerWidth, setContainerWidth] = useState(0);
   const { id, cover } = useLocalSearchParams();
-  const [volume, setVolume] = useState(1);
   const { style } = useTheme();
-
+  const { isPlaying, InitSong, TogglePlayPause, sound } = usePlaylist();
   const scrollAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -34,12 +31,7 @@ export default function Song() {
       if (songDetails) {
         setSong(songDetails);
         setDuration(songDetails.duration || 0);
-        const uri = await streamSong(id);
-        const { sound: playbackObject } = await Audio.Sound.createAsync(
-          { uri: uri },
-          { shouldPlay: false, staysActiveInBackground: true }
-        );
-        setSound(playbackObject);
+        InitSong(id);
       }
     };
     fetchSong();
@@ -47,13 +39,6 @@ export default function Song() {
       if (sound) sound.unloadAsync();
     };
   }, [id]);
-
-  const handleVolumeChange = async (value) => {
-    setVolume(value);
-    if (sound) {
-      await sound.setVolumeAsync(value);
-    }
-  };
 
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -66,19 +51,6 @@ export default function Song() {
     }, 1000);
     return () => clearInterval(interval);
   }, [isPlaying, sound]);
-
-  const togglePlayPause = async () => {
-    if (sound) {
-      const status = await sound.getStatusAsync();
-      if (status.isPlaying) {
-        await sound.pauseAsync();
-        setIsPlaying(false);
-      } else {
-        await sound.playAsync();
-        setIsPlaying(true);
-      }
-    }
-  };
 
   const handleSliderChange = async (value) => {
     if (sound) {
@@ -121,22 +93,9 @@ export default function Song() {
     setContainerWidth(width);
   };
 
-  // Determina el ícono de volumen según el valor
-  const getVolumeIcon = () => {
-    if (volume === 0) {
-      return "volume-x"; // Volumen silenciado
-    } else if (volume <= 0.5) {
-      return "volume-1"; // Volumen bajo
-    } else {
-      return "volume-2"; // Volumen alto
-    }
-  };
-
   if (!song) {
     return (
-      <View style={[styles.container, { backgroundColor: style.background }]}>
-        <SecondaryText children="Cargando canción..." />
-      </View>
+      <Loading />
     );
   }
 
@@ -176,30 +135,10 @@ export default function Song() {
         </View>
         <SecondaryText text={song.suffix + " - " + song.bitRate + "kbps"} />
       </View>
-
-      {/* Contenedor de volumen con íconos */}
-      <View style={styles.volumeContainer}>
-        <Feather
-          name={getVolumeIcon()}
-          size={24}
-          color={style.text}
-          style={styles.volumeIcon}
-        />
-        <Slider
-          style={styles.volumeSlider}
-          minimumValue={0}
-          maximumValue={1}
-          value={volume}
-          onValueChange={handleVolumeChange}
-          minimumTrackTintColor={style.accent}
-          maximumTrackTintColor="#8A8A8A"
-          thumbTintColor="#FFFFFF"
-        />
-      </View>
       <View style={styles.controlButtons}>
         <ShuffleBtn />
         <PrevBtn />
-        <TogglePlayPauseBtn toggle={isPlaying} onPress={togglePlayPause} />
+        <TogglePlayPauseBtn toggle={isPlaying} onPress={TogglePlayPause} />
         <NextBtn />
         <RepeatBtn />
       </View>
