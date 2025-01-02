@@ -1,44 +1,45 @@
 import React, { useEffect, useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
-import { GetPlayingSong } from "../../src/utils/subsonic/songs"
+import { usePlaylist } from "../context/PlaylistContext"
+import { TogglePlayPauseBtn, NextBtn } from "./button";
+import { GetSong } from "../utils/subsonic/songs";
+import { getCover } from "../utils/subsonic/art";
 
 export const Player = () => {
   const [song, setSong] = useState(null);
-  const [isPlaying, setIsPlaying] = useState(false);
-
+  const [cover, setCover] = useState(null);
+  const { sound, currentSong, playlist, isPlaying, TogglePlayPause } = usePlaylist();
 
   useEffect(() => {
-    GetPlayingSong().then((song) => {
-      setSong(song);
-    })
-  }, []);
+    console.log(currentSong)
+    const fetchSong = async () => {
+      const songDetails = await GetSong(currentSong);
+      if (songDetails) {
+        setSong(songDetails);
+      }
+    };
+    fetchSong();
+    const fetchCover = async () => {
+      let data = await getCover(song.coverArt);
+      setCover(data);
+    }
+    fetchCover();
+  }, [sound]);
 
-  const handlePlayPlause = () => {
-    setIsPlaying(!isPlaying);
-  }
-  const handleNext = () => {
-    console.log("Next");
-  }
-
-
-  if (!song) {
+  if (playlist.length == 0) {
     return null;
   }
 
   return (
     <View style={styles.player}>
-      <Image source={{ uri: song.cover }} style={styles.albumArt} />
-      <View>
+      <Image source={{ uri: cover }} style={styles.albumArt} />
+      <View style={styles.info}>
         <Text style={styles.songTitle}>{song.title}</Text>
         <Text style={styles.artistName}>{song.artist}</Text>
       </View>
-      <TouchableOpacity onPress={handlePlayPlause} style={styles.playButton}>
-        <MaterialIcons name={isPlaying ? "play-circle-filled" : "pause-circle-filled"} size={32} color="white" />
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleNext} style={styles.playButton}>
-        <MaterialIcons name="skip-next" size={32} color="white" />
-      </TouchableOpacity>
+      <TogglePlayPauseBtn toggle={isPlaying} onPress={TogglePlayPause} />
+      <NextBtn />
     </View>
   );
 };

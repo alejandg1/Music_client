@@ -60,6 +60,7 @@ export const PlaylistProvider = ({ children }) => {
   return (
     <PlayListContext.Provider
       value={{
+        sound,
         dropPlaylist,
         playlist,
         isPlaying,

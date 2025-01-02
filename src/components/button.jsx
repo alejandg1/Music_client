@@ -4,7 +4,6 @@ import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
 import { Link } from "expo-router";
 import { usePlaylist } from "../context/PlaylistContext";
-import { play } from "react-native-track-player/lib/src/trackPlayer";
 
 
 export const TogglePlayPauseBtn = ({ toggle, onPress }) => {
