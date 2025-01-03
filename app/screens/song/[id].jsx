@@ -22,21 +22,21 @@ export default function Song() {
   const [containerWidth, setContainerWidth] = useState(0);
   const { id, cover } = useLocalSearchParams();
   const { style } = useTheme();
-  const { isPlaying, InitSong, TogglePlayPause, sound } = usePlaylist();
+  const { isPlaying, TogglePlayPause, sound } = usePlaylist();
   const scrollAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
+    console.log(song, isPlaying, sound)
     const fetchSong = async () => {
       const songDetails = await GetSong(id);
       if (songDetails) {
         setSong(songDetails);
         setDuration(songDetails.duration || 0);
-        InitSong(id);
       }
     };
     fetchSong();
     return () => {
-      if (sound) sound.unloadAsync();
+      console.log("Componente desmontado, pero el audio continúa");
     };
   }, [id]);
 

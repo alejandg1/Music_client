@@ -5,7 +5,6 @@ import { usePlaylist } from "../context/PlaylistContext"
 import { TogglePlayPauseBtn, NextBtn } from "./button";
 import { GetSong } from "../utils/subsonic/songs";
 import { getCoverArt } from "../utils/subsonic/art";
-import { SecondaryText } from "./text";
 import { useRouter } from "expo-router";
 
 export const Player = () => {
@@ -69,7 +68,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontFamily: "JetBrainsMono-Bold",
-    maxWidth: "90%",
+    maxWidth: "70%",
     overflow: "hidden",
   },
   artist: {
