@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { SettingsBtn } from "../../src/components/settings";
-import { PrincipalText } from "../../src/components/text";
 import { SearchBtn } from "../../src/components/button";
 import { RootContainer } from "../../src/components/container";
 import { Player } from "../../src/components/player";
@@ -15,10 +14,9 @@ export default function Home() {
           <SettingsBtn />
         </View>
         <View style={styles.content}>
-          <PrincipalText text="Bienvenido a MusiCli" />
-          <Player />
         </View>
       </View>
+      <Player />
     </RootContainer>
   );
 };

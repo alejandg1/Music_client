@@ -6,28 +6,28 @@ import { Link } from "expo-router";
 import { usePlaylist } from "../context/PlaylistContext";
 
 
-export const TogglePlayPauseBtn = ({ toggle, onPress }) => {
+export const TogglePlayPauseBtn = ({ toggle, onPress, size }) => {
   const { style } = useTheme();
   return (
     <Pressable onPress={onPress}>
-      <Ionicons name={toggle ? "pause-circle-sharp" : "play-circle-sharp"} size={60} color={style.secondaryText} />
+      <Ionicons name={toggle ? "pause-circle-sharp" : "play-circle-sharp"} size={size ? size : 60} color={style.icon} />
     </Pressable>
   );
 }
 
-export const NextBtn = ({ onPress }) => {
+export const NextBtn = ({ onPress, size }) => {
   const { playlist } = usePlaylist();
   const { style } = useTheme();
   if (playlist.length != 0) {
     return (
       <Pressable >
-        <Ionicons name="play-skip-forward-outline" size={40} color={style.border} />
+        <Ionicons name="play-skip-forward-outline" size={size ? size : 40} color={style.border} />
       </Pressable>
     );
   }
   return (
     <Pressable onPress={onPress}>
-      <Ionicons name="play-skip-forward-outline" size={40} color={style.secondaryText} />
+      <Ionicons name="play-skip-forward-outline" size={40} color={style.icon} />
     </Pressable>
   );
 }
@@ -35,7 +35,7 @@ export const NextBtn = ({ onPress }) => {
 export const PrevBtn = ({ onPress }) => {
   const { style } = useTheme();
   const { playlist, PrevSong, initSong } = usePlaylist();
-  const color = playlist.length != 0 ? style.border : style.secondaryText;
+  const color = playlist.length != 0 ? style.border : style.icon;
   const func = playlist.length != 0 ? () => { initSong(playlist[0]) } : PrevSong;
 
   return (

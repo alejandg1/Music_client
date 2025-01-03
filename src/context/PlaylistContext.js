@@ -28,13 +28,14 @@ export const PlaylistProvider = ({ children }) => {
         await sound.unloadAsync();
       }
       const uri = local ? await streamSong(id) : await streamSong(id);
+      setCurrentSong(id);
       const { sound: playbackObject } = await Audio.Sound.createAsync(
         { uri: uri },
         { shouldPlay: true, staysActiveInBackground: true }
       );
       setSound(playbackObject);
       setIsPlaying(true);
-      setCurrentSong(id);
+      console.log(currentSong)
       await playbackObject.playAsync();
     }
     catch (error) {
@@ -51,12 +52,10 @@ export const PlaylistProvider = ({ children }) => {
       setIsPlaying(true);
     }
   }
-
-  const NextSong = (song) => {
-  }
-  const PrevSong = (song) => {
-  }
-
+  // const NextSong = (song) => {
+  // }
+  // const PrevSong = (song) => {
+  // }
   return (
     <PlayListContext.Provider
       value={{
@@ -71,8 +70,8 @@ export const PlaylistProvider = ({ children }) => {
         toggleIsLocal,
         initSong,
         TogglePlayPause,
-        NextSong,
-        PrevSong,
+        // NextSong,
+        // PrevSong,
       }}>
       {children}
     </PlayListContext.Provider>

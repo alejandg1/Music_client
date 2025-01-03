@@ -1,86 +1,102 @@
 import React, { useEffect, useState } from "react";
-import { MaterialIcons } from "@expo/vector-icons";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { useTheme } from "../context/ThemeContext";
+import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import { usePlaylist } from "../context/PlaylistContext"
 import { TogglePlayPauseBtn, NextBtn } from "./button";
 import { GetSong } from "../utils/subsonic/songs";
-import { getCover } from "../utils/subsonic/art";
+import { getCoverArt } from "../utils/subsonic/art";
+import { SecondaryText } from "./text";
+import { useRouter } from "expo-router";
 
 export const Player = () => {
+  const { style } = useTheme();
   const [song, setSong] = useState(null);
   const [cover, setCover] = useState(null);
-  const { sound, currentSong, playlist, isPlaying, TogglePlayPause } = usePlaylist();
+  const { currentSong, playlist, isPlaying, TogglePlayPause } = usePlaylist();
+  const router = useRouter();
+
+  const handlePress = () => {
+    router.push({
+      pathname: `/screens/song/${song.id}`,
+      params: { cover: cover },
+    });
+  }
 
   useEffect(() => {
-    console.log(currentSong)
     const fetchSong = async () => {
       const songDetails = await GetSong(currentSong);
+      const coverUri = await getCoverArt(songDetails.coverArt);
       if (songDetails) {
         setSong(songDetails);
       }
+      setCover(coverUri);
     };
     fetchSong();
-    const fetchCover = async () => {
-      let data = await getCover(song.coverArt);
-      setCover(data);
-    }
-    fetchCover();
-  }, [sound]);
-
-  if (playlist.length == 0) {
+  }, [currentSong]);
+  if (playlist.length == 0 || !song || !cover) {
     return null;
   }
 
   return (
-    <View style={styles.player}>
-      <Image source={{ uri: cover }} style={styles.albumArt} />
+    <Pressable style={[styles.player, { backgroundColor: style.card }]} onPress={handlePress}>
       <View style={styles.info}>
-        <Text style={styles.songTitle}>{song.title}</Text>
-        <Text style={styles.artistName}>{song.artist}</Text>
+        <Image source={{ uri: cover }} style={styles.albumArt} />
+        <View style={styles.text}>
+          <Text numberOfLines={1} style={[styles.title, { color: style.text }]}>{song.title}</Text>
+          <Text numberOfLines={1} style={[styles.artist, { color: style.secondaryText }]}>{song.artist}</Text>
+        </View>
       </View>
-      <TogglePlayPauseBtn toggle={isPlaying} onPress={TogglePlayPause} />
-      <NextBtn />
-    </View>
+      <View style={styles.controls}>
+        <TogglePlayPauseBtn size={45} toggle={isPlaying} onPress={TogglePlayPause} />
+        <NextBtn size={35} />
+      </View>
+    </Pressable>
   );
 };
 
-const styles = (theme) => StyleSheet.create({
+const styles = StyleSheet.create({
   player: {
+    display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    padding: 10,
-    backgroundColor: theme.surface,
-    borderRadius: 8,
-    margin: 10,
+    justifyContent: "flex-start",
+    width: "100%",
+    height: "10%",
+    padding: 5,
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
+  },
+  title: {
+    fontSize: 16,
+    fontFamily: "JetBrainsMono-Bold",
+    maxWidth: "90%",
+    overflow: "hidden",
+  },
+  artist: {
+    maxWidth: "90%",
+    overflow: "hidden",
+    fontSize: 14,
+    fontFamily: "JetBrainsMono-Regular",
+  },
+  text: {
+    display: "flex",
+    flexDirection: "column",
   },
   albumArt: {
-    width: 50,
-    height: 50,
-    borderRadius: 8,
+    width: 60,
+    height: 60,
+    borderRadius: 10,
+    marginRight: 15,
   },
   info: {
-    flex: 1,
-    marginLeft: 10,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
   },
-  songTitle: {
-    color: theme.textPrimary,
-    fontSize: 16,
-    fontWeight: "bold",
+  controls: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
-  artistName: {
-    color: theme.textPrimary,
-    fontSize: 14,
-    marginTop: 4,
-  },
-  playButton: {
-    marginLeft: 10,
-    padding: 10,
-    backgroundColor: theme.surface,
-    borderRadius: 5,
-  },
-  playButtonText: {
-    color: theme.textPrimary,
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+
 });
