@@ -6,6 +6,9 @@ import { getPlaylist } from "../../../src/utils/subsonic/playlists";
 import { ListItem } from "../../../src/components/listItem";
 import { getCoverArt } from "../../../src/utils/subsonic/art";
 import { useTheme } from "../../../src/context/ThemeContext";
+import { ListPlayBtn } from "../../../src/components/button";
+import { Player } from "../../../src/components/player";
+import { RootContainer } from "../../../src/components/container";
 
 export default function Lists() {
   const { List } = useLocalSearchParams();
@@ -48,7 +51,7 @@ export default function Lists() {
   }
 
   return (
-    <View style={[styles.container, { backgroundColor: style.background }]}>
+    <RootContainer>
       {loading ? (
         <ActivityIndicator size="large" color={style.accent} />
       ) : (
@@ -56,11 +59,9 @@ export default function Lists() {
           <View style={[styles.header, { color: style.text }]}>
             <Image style={styles.image} source={{ uri: coverArt }} />
             <View style={styles.textContainer}>
-              <Text style={[styles.text,{color:style.text}]}>{object.name}</Text>
+              <Text style={[styles.text, { color: style.text }]}>{object.name}</Text>
               <View style={styles.buttons}>
-                <Pressable onPress={() => console.log('pressed')}>
-                  <MaterialIcons name="play-arrow" size={30} color={style.accent} />
-                </Pressable>
+                <ListPlayBtn songs={songs} />
                 <Pressable onPress={() => console.log('pressed')}>
                   <MaterialIcons name="shuffle" size={30} color={style.accent} />
                 </Pressable>
@@ -79,19 +80,11 @@ export default function Lists() {
           />
         </>
       )}
-    </View>
+      <Player />
+    </RootContainer>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    gap: 60,
-
-  },
   buttons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -101,7 +94,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     fontSize: 24,
-    height: "25%",
+    height: "34%",
     alignItems: 'center',
   },
   textContainer: {

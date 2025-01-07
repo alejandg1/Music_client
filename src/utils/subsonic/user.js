@@ -3,7 +3,18 @@ import { Alert } from "react-native";
 import { setConfig, getConfig } from "../local/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export const SingIn = async (url, username, passw, version = "1.16.1", client = "Music_Client", coverSize = "720") => {
+export const SingIn = async (name, url, username, passw, version = "1.16.1", client = "Music_Client", coverSize = "720") => {
+  let users = await getConfig("users") || [];
+  users.push({
+    name: name,
+    url: url,
+    username: username,
+    password: passw,
+    version: version,
+    client: client,
+    coverSize: cover
+  })
+
   setConfig("url", url);
   setConfig("username", username);
   setConfig("password", passw);

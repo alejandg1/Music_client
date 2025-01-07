@@ -7,40 +7,34 @@ import {
   Animated,
 } from "react-native";
 import Slider from "@react-native-community/slider";
-import { useLocalSearchParams } from "expo-router";
 import { useTheme } from "../../../src/context/ThemeContext";
 import { GetSong } from "../../../src/utils/subsonic/songs";
 import { SecondaryText } from "../../../src/components/text";
 import { CoverImage } from "../../../src/components/image";
-import { NextBtn, PrevBtn, RepeatBtn, ShuffleBtn, TogglePlayPauseBtn } from "../../../src/components/button";
+import { NextBtn, PlaylstBtn, PrevBtn, RepeatBtn, ShuffleBtn, TogglePlayPauseBtn } from "../../../src/components/button";
 import { usePlaylist } from "../../../src/context/PlaylistContext";
+import { getCoverArt } from "../../../src/utils/subsonic/art";
 
 export default function Song() {
   const [song, setSong] = useState(null);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [cover, setCover] = useState(null);
   const [containerWidth, setContainerWidth] = useState(0);
-  const { id, cover } = useLocalSearchParams();
   const { style } = useTheme();
-  const { isPlaying, TogglePlayPause, sound } = usePlaylist();
+  const { isPlaying, TogglePlayPause, currentSong, sound, nextSong } = usePlaylist();
   const scrollAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    console.log(song, isPlaying, sound)
     const fetchSong = async () => {
-      const songDetails = await GetSong(id);
+      const songDetails = await GetSong(currentSong);
       if (songDetails) {
         setSong(songDetails);
         setDuration(songDetails.duration || 0);
+        let url = await getCoverArt(songDetails.coverArt);
+        setCover(url);
       }
-    };
-    fetchSong();
-    return () => {
-      console.log("Componente desmontado, pero el audio continúa");
-    };
-  }, [id]);
 
-  useEffect(() => {
     const interval = setInterval(async () => {
       if (isPlaying && sound) {
         const status = await sound.getStatusAsync();
@@ -50,7 +44,11 @@ export default function Song() {
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [isPlaying, sound]);
+
+
+    };
+    fetchSong();
+  }, [currentSong]);
 
   const handleSliderChange = async (value) => {
     if (sound) {
@@ -91,7 +89,7 @@ export default function Song() {
   const onTitleLayout = (event) => {
     const { width } = event.nativeEvent.layout;
     setContainerWidth(width);
-  };
+  }
 
   if (!song) {
     return (
@@ -115,9 +113,9 @@ export default function Song() {
             {song.title}
           </Animated.Text>
         </ScrollView>
-
         <SecondaryText text={song.artist} />
       </View>
+      <PlaylstBtn />
       <View style={styles.controls}>
         <Slider
           style={styles.slider}
@@ -139,7 +137,7 @@ export default function Song() {
         <ShuffleBtn />
         <PrevBtn />
         <TogglePlayPauseBtn toggle={isPlaying} onPress={TogglePlayPause} />
-        <NextBtn />
+        <NextBtn onPress={nextSong} />
         <RepeatBtn />
       </View>
     </View>

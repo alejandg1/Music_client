@@ -10,6 +10,7 @@ export const PlaylistProvider = ({ children }) => {
   const [sound, setSound] = useState(null);
   const [currentSong, setCurrentSong] = useState(null);
   const [isLocal, setIsLocal] = useState(true);
+
   const addToPlaylist = (song) => {
     setPlaylist((prev) => [...prev, song]);
   }
@@ -22,11 +23,29 @@ export const PlaylistProvider = ({ children }) => {
   const dropPlaylist = () => {
     setPlaylist([]);
   }
+  const nextSong = async () => {
+    try {
+      const currentIndex = playlist.indexOf(currentSong);
+      console.log(currentIndex)
+      if (currentIndex === -1 || currentIndex + 1 >= playlist.length) {
+        console.log("No more songs in the playlist");
+        return;
+      }
+      const nextSong = playlist[currentIndex + 1];
+      setCurrentSong(nextSong);
+      await initSong(nextSong, isLocal);
+    } catch (error) {
+      console.error("Error moving to the next song:", error);
+    }
+
+  }
+
   const initSong = async (id, local) => {
     try {
       if (sound) {
         await sound.unloadAsync();
       }
+      console.log(id)
       const uri = local ? await streamSong(id) : await streamSong(id);
       setCurrentSong(id);
       const { sound: playbackObject } = await Audio.Sound.createAsync(
@@ -35,7 +54,13 @@ export const PlaylistProvider = ({ children }) => {
       );
       setSound(playbackObject);
       setIsPlaying(true);
-      console.log(currentSong)
+      playbackObject.setOnPlaybackStatusUpdate((status) => {
+        if (status.didJustFinish) {
+          console.log("Song Finished");
+          nextSong();
+        }
+      }
+      );
       await playbackObject.playAsync();
     }
     catch (error) {
@@ -52,10 +77,6 @@ export const PlaylistProvider = ({ children }) => {
       setIsPlaying(true);
     }
   }
-  // const NextSong = (song) => {
-  // }
-  // const PrevSong = (song) => {
-  // }
   return (
     <PlayListContext.Provider
       value={{
@@ -70,8 +91,7 @@ export const PlaylistProvider = ({ children }) => {
         toggleIsLocal,
         initSong,
         TogglePlayPause,
-        // NextSong,
-        // PrevSong,
+        nextSong,
       }}>
       {children}
     </PlayListContext.Provider>

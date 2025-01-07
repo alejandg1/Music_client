@@ -1,23 +1,13 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { Player } from "../../src/components/player";
+import { RootContainer } from "../../src/components/container";
+import { SecondaryText } from "../../src/components/text";
 
 export default function Downloads() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Downloads Screen</Text>
-    </View>
+    <RootContainer>
+      <SecondaryText text="Downloads" />
+      <Player />
+    </RootContainer>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#121212",
-  },
-  text: {
-    color: "white",
-    fontSize: 20,
-  },
-});

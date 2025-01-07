@@ -24,9 +24,7 @@ export default function Login() {
       else {
         Alert.alert("Error", "Error al iniciar sesión.");
       }
-
     }
-
   }
 
   return (

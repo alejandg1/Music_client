@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useTheme } from "../../src/context/ThemeContext";
-import { PrincipalText } from "../../src/components/text";
-import { ScrollView, View, StyleSheet, FlatList, ActivityIndicator } from "react-native";
+import { PrincipalText, SecondaryText } from "../../src/components/text";
+import { ScrollView, View, StyleSheet, FlatList, ActivityIndicator, Alert, Pressable } from "react-native";
 import { Card } from "../../src/components/cards";
 import { getPlaylists } from "../../src/utils/subsonic/playlists";
 import { getNewestsAlbums } from "../../src/utils/subsonic/albums";
 import { LinkBtn } from "../../src/components/button";
 import { SearchBar } from "../../src/components/searchBar";
+import { ping } from "../../src/utils/subsonic/Index";
+import { RootContainer } from "../../src/components/container";
+import { Player } from "../../src/components/player";
+
+const checkConection = async () => {
+  let connected = await ping();
+  return connected;
+}
 
 const renderAlbum = ({ item }) => {
   return (
@@ -24,6 +32,7 @@ const renderList = ({ item }) => {
 export default function Discover() {
   const { style } = useTheme();
   const [playlists, setPlaylists] = useState([]);
+  const [connected, setConnected] = useState(false);
   const [loading, setLoading] = useState(true);
   const [albums, setAlbums] = useState([]);
   const [loadingAl, setLoadingAl] = useState(true);
@@ -37,14 +46,31 @@ export default function Discover() {
       setAlbums(data || []);
       setLoadingAl(false);
     });
-  }, []);
+    checkConection().then((data) => {
+      if (!data) {
+        Alert.alert("Error", "No se pudo conectar al servidor.");
+      }
+      setConnected(data);
+    }
+    );
+  }, [connected]);
+
+  if (!connected) {
+    return (
+      <View style={[styles.container, { backgroundColor: style.background }]}>
+        <PrincipalText text="No se pudo conectar al servidor." />
+        <Pressable onPress={() => checkConection()}><SecondaryText text="Reintentar" /></Pressable>
+      </View>
+    );
+  }
 
   return (
-    <View style={[styles.container, { backgroundColor: style.background }]}>
+    <RootContainer>
       <View style={styles.header}>
         <SearchBar />
       </View>
       <ScrollView>
+        <Pressable onPress={() => checkConection()}><SecondaryText text="Reintentar" /></Pressable>
         <PrincipalText text="Playlists" />
         {loading ? (
           <ActivityIndicator size="large" color="#ffffff" />
@@ -74,7 +100,8 @@ export default function Discover() {
         )}
         <LinkBtn text="Artistas" route="/screens/Artists" />
       </ScrollView>
-    </View>
+      <Player />
+    </RootContainer>
   );
 };
 

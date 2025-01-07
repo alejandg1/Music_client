@@ -2,8 +2,27 @@ import { Pressable, Text } from "react-native";
 import { StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTheme } from "../context/ThemeContext";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { usePlaylist } from "../context/PlaylistContext";
+
+export const ListPlayBtn = ({ songs }) => {
+  const { addToPlaylist, initSong, playlist, dropPlaylist } = usePlaylist();
+  const { style } = useTheme();
+  const onPress = async () => {
+    dropPlaylist();
+    songs.forEach((song) => {
+      addToPlaylist(song.id);
+    });
+    await initSong(playlist[0]);
+  }
+
+  return (
+    <Pressable onPress={onPress}>
+      <Ionicons name="play-outline" size={40} color={style.accent} />
+    </Pressable>
+  );
+}
+
 
 
 export const TogglePlayPauseBtn = ({ toggle, onPress, size }) => {
@@ -18,7 +37,7 @@ export const TogglePlayPauseBtn = ({ toggle, onPress, size }) => {
 export const NextBtn = ({ onPress, size }) => {
   const { playlist } = usePlaylist();
   const { style } = useTheme();
-  if (playlist.length != 0) {
+  if (playlist.length == 0) {
     return (
       <Pressable >
         <Ionicons name="play-skip-forward-outline" size={size ? size : 40} color={style.border} />
@@ -35,7 +54,7 @@ export const NextBtn = ({ onPress, size }) => {
 export const PrevBtn = ({ onPress }) => {
   const { style } = useTheme();
   const { playlist, PrevSong, initSong } = usePlaylist();
-  const color = playlist.length != 0 ? style.border : style.icon;
+  const color = playlist.length == 0 ? style.border : style.icon;
   const func = playlist.length != 0 ? () => { initSong(playlist[0]) } : PrevSong;
 
   return (
@@ -100,6 +119,19 @@ export const SearchBtn = ({ onPress }) => {
     </Pressable>
   );
 }
+
+export const PlaylstBtn = () => {
+  const { style } = useTheme();
+  const redirect = () => {
+    router.push("/screens/Playlist");
+  }
+  return (
+    <Pressable style={[styles.btn, { backgroundColor: style.btn }]} onPress={redirect}>
+      <Ionicons name="musical-notes" size={30} color={style.accent} />
+    </Pressable>
+  );
+}
+
 
 const styles = StyleSheet.create({
   btn: {
